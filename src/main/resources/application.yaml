@@ -3,14 +3,14 @@ spring:
     name: contact-management
 
   datasource:
-    uri: jdbc:mysql://localhost:3306/contact-management
+    url: jdbc:mysql://localhost:3306/contact-management
     username: root
-    password: root
+    password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -25,3 +25,7 @@ server:
   port: 9000
   servlet:
     context-path: /contact-management
+
+app:
+  phone:
+    default-region: IN

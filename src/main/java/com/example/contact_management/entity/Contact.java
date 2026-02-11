@@ -1,47 +1,45 @@
 package com.example.contact_management.entity;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Data
-@Document(collection = "contacts")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Contact {
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@Table(
+        name = "contacts",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_contact_email", columnNames = "email")
+        },
+        indexes = {
+                @Index(name = "contact_email_index", columnList = "email"),
+                @Index(name = "contact_phone_index", columnList = "phone_number")
+        }
+)
+public class Contact extends BaseEntity {
 
-    @NotBlank
+    @Column(nullable = false)
     private String address;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @NotBlank
-    @Email
-    @Indexed(unique = true)
+    @Column(nullable = false, length = 150)
     private String email;
 
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
+    @Column(name = "last_name", length = 100)
+    private String lastName;
 
-    @NotBlank
-    private String name;
+    @Column(name = "phone_number", length = 15)
+    private String phoneNumber;
 
-    @Pattern(regexp = "^[0-9]{10}$")
-    private String phone;
-
-    @NotBlank
+    @Column(nullable = false, length = 20)
     private String status;
 }
